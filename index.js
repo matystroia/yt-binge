@@ -16,22 +16,18 @@ app.get('/', function (req, res) {
 });
 
 app.listen(3000, function () {
-    console.log('Example app listening on port 3000!')
+    console.log('App listening on port 3000!')
 });
 
 app.post('/', function (req, res) {
-    youtube.channels.list({
-        'id': req.body.channelId,
-        'part': 'snippet,contentDetails',
-        'key': API_KEY
-    }, function (err, response) {
-        if (response.data['pageInfo']['totalResults'] === 0) {
+    getChannel(req.body.channelId, function (channel) {
+        if (channel === null) {
             res.render('index', {error: "Channel doesn't exist."});
-            return
+            return;
         }
 
-        let channelTitle = response.data['items'][0]['snippet']['title'];
-        let uploadsPlaylist = response.data['items'][0]['contentDetails']['relatedPlaylists']['uploads'];
+        let channelTitle = channel['snippet']['title'];
+        let uploadsPlaylist = channel['contentDetails']['relatedPlaylists']['uploads'];
         let videos = [];
 
         getPlaylistVideos(null, uploadsPlaylist, videos, function (videoIds) {
@@ -84,6 +80,29 @@ function secondsToTime(seconds) {
     ret.push(Math.floor(seconds));
 
     return ret;
+}
+
+function getChannel(channelId, callback) {
+    youtube.channels.list({
+        'id': channelId,
+        'part': 'snippet,contentDetails',
+        'key': API_KEY
+    }, function (err, response) {
+        if (response.data['pageInfo']['totalResults'] === 0) {
+            youtube.channels.list({
+                'forUsername': channelId,
+                'part': 'snippet,contentDetails',
+                'key': API_KEY
+            }, function (err, response) {
+                if (response.data['pageInfo']['totalResults'] === 0)
+                    callback(null);
+                else
+                    callback(response.data['items'][0]);
+            });
+        }
+        else
+            callback(response.data['items'][0]);
+    });
 }
 
 function getPlaylistVideos(token, playlistId, videoIds, callback) {
