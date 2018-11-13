@@ -11,7 +11,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-app.get('/yt-binge', function (req, res) {
+app.get('/', function (req, res) {
     res.render('index', {});
 });
 
@@ -19,7 +19,7 @@ app.listen(3000, function () {
     console.log('Example app listening on port 3000!')
 });
 
-app.post('/yt-binge', function (req, res) {
+app.post('/', function (req, res) {
     youtube.channels.list({
         'id': req.body.channelId,
         'part': 'snippet,contentDetails',
