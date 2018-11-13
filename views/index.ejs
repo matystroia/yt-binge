@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>YouTube Binge</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300, 700" rel="stylesheet">
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+<div class="outer">
+    <div class="container">
+        <fieldset>
+            <form action="/yt-binge" method="post" onsubmit="onSubmit()">
+                <input name="channelId" type="text" class="ghost-input" placeholder="Enter a YouTube Channel ID" required>
+                <input type="submit" class="ghost-button" value="Get Time">
+            </form>
+        </fieldset>
+        <div id="spinner"></div>
+        <% if (typeof time !== 'undefined') { %>
+        <p id="time">It would take you <span><%= time %></span> to watch all of <%= title %>'s videos.<br>You can do that <a href="<%= url %>">here.</a></p>
+        <% } %>
+
+        <% if (typeof error !== 'undefined') { %>
+        <p id="error"><%= error %></p>
+        <br>
+        <p id="error-help">To find the Channel ID, go to the channel page from any video by that channel and look in the URL. It should look something like 'UCSr-FXpCojmsXfto7KcBnUA'</p>
+        <% } %>
+
+        <% if (typeof audio !== 'undefined') { %>
+        <div id="audio" class="<%= audio %>"></div>
+        <% } %>
+    </div>
+</div>
+</body>
+</html>

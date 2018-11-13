@@ -1,0 +1,146 @@
+/*
+  Styles from this codepen:
+  https://codepen.io/official_naveen/pen/rgknI
+*/
+
+body {
+    background-color: #0b090f;
+    margin: 0 auto;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    position: relative;
+    top: 30%;
+    text-align: center;
+
+}
+
+.outer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+fieldset {
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+    display: block;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-before: 0em;
+    -webkit-padding-start: 0em;
+    -webkit-padding-end: 0em;
+    -webkit-padding-after: 0em;
+    border: 0;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    min-width: -webkit-min-content;
+    padding-bottom: 15px;
+}
+
+.ghost-input, p {
+    display: block;
+    font-weight: 300;
+    width: 100%;
+    font-size: 25px;
+    border: 0px;
+    outline: none;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #fff0bc;
+    font-family: Montserrat, Verdana;
+    padding: 10px 15px;
+    margin-bottom: 30px;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -ms-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.ghost-input {
+    background-color: #0b090f;
+    border: 1px solid #ffc45f;
+}
+
+.ghost-button {
+    font-family: Montserrat;
+    font-weight: 300;
+    font-size: 20px;
+    background-color: transparent;
+    color: #fff0bc;
+    border: 2px solid #ffc45f;
+    padding: 10px 30px;
+    width: 85%;
+    height: 50px;
+    min-width: 350px;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -ms-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.ghost-button:hover {
+    border: 2px solid #fff0bc;
+}
+
+p {
+    margin: 15px auto;
+}
+
+a:link, a:visited, a:hover{
+    color: #ffc45f;
+}
+
+br {
+    display: block;
+    margin: 10px 0;
+}
+
+#error {
+    color: #bb6e26;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+#error-help {
+    padding: 0px;
+    margin: 0px;
+    color: #bb6e26;
+    font-size: 14px;
+}
+
+.loader {
+    margin: 15px auto;
+    border: 12px solid #0b090f;
+    border-top: 12px solid #ffc45f;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+.loader-text {
+    color: #ffc45f;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+span {
+    font-weight: 700;
+}
