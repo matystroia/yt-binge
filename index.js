@@ -63,21 +63,10 @@ app.post('/yt-binge', function (req, res) {
                     }
                 }
 
-                let audioFile;
-                switch (req.body.channelId) {
-                    case 'UCSmrKgWDGSlTypALaD-tWhA':
-                        audioFile = 'dorian.mp3';
-                        break;
-                    case 'UCRuAOLUYIkFmcGSDvfBaIZQ':
-                        audioFile = 'nelson.mp3';
-                        break;
-                }
-
                 res.render('index', {
                     time: timeText,
                     title: channelTitle,
-                    url: 'https://www.youtube.com/playlist?list=' + uploadsPlaylist,
-                    audio: audioFile
+                    url: 'https://www.youtube.com/playlist?list=' + uploadsPlaylist
                 });
             });
         })
