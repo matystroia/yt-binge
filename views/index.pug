@@ -1,0 +1,38 @@
+doctype html
+html(lang="en")
+  head
+    title= 'YouTube Binge'
+    link(rel='stylesheet', href='css/style.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Montserrat:300, 700')
+    script(type='text/javascript').
+      function onSubmit() {
+        document.getElementsByClassName('intro')[0].setAttribute('style', 'display: none');
+        document.getElementsByClassName('input-container')[0].setAttribute('style', 'display: none')
+        document.getElementById("spinner").setAttribute('style', 'display: unset')
+      }
+  body
+    form(action='/result', method='post', onsubmit='onSubmit()')
+      .container
+        h1 YouTube Binge!
+        .intro
+          | Find out how long it would take to watch all videos for a given channel.
+          br
+          | Enter a 
+          em(title='UC6nSFpj9HTCZ5t') Channel ID
+          | , 
+          em(title='Vsauce') Username
+          | , or 
+          em(title='@Vsauce') Handle
+        #spinner(style='display: none')
+          .loader
+          p
+          | This might take a while
+        .input-container
+          input(
+            name='query',
+            type='text',
+            required,
+            autofocus
+          )
+          button(type='submit')
+            img(src='clock-solid.svg')

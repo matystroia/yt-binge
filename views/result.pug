@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+  head
+    title= 'YouTube Binge'
+    link(rel='stylesheet', href='css/style.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Montserrat:300, 700')
+    script(type='text/javascript').
+  body
+    .container
+      if time
+        p.result
+          | It would take
+          |
+          span.time= time
+          |
+          | to watch all of
+          |
+          span.title= title
+          | 's videos.
+          br
+          | You can do that 
+          a(href=url) here
+          | .
+      if error
+        p.error= error
+      br
+      a(href='/') Back

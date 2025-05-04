@@ -2,17 +2,24 @@
   "name": "yt-binge",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "ejs": "^2.5.7",
-    "express": "^4.16.3",
-    "googleapis": "^27.0.0",
-    "iso8601-duration": "^1.1.1"
+    "express": "^5.1.0",
+    "googleapis": "^148.0.0",
+    "iso8601-duration": "^1.1.1",
+    "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "@types/express": "^5.0.1"
   }
 }
