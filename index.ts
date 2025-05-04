@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { google, youtube_v3 } from "googleapis";
+import { rateLimit } from "express-rate-limit";
 import isoDuration from "iso8601-duration";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
@@ -17,6 +18,17 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "pug");
 
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  handler: (_, res) =>
+    res.render("result", {
+      error: "Sorry, you've made too many requests! Try again in an hour",
+    }),
+});
+
 app.listen(PORT, function () {
   console.log(`App listening on port ${PORT}`);
 });
@@ -25,7 +37,7 @@ app.get("/", function (_, res) {
   res.render("index", {});
 });
 
-app.post("/result", async function (req, res) {
+app.post("/result", limiter, async function (req, res) {
   const query = req.body.query;
   if (!query) {
     return res.render("result", { error: "Couldn't find channel" });

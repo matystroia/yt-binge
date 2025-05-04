@@ -14,13 +14,14 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
     "googleapis": "^148.0.0",
     "iso8601-duration": "^1.1.1",
     "pug": "^3.0.3"
   },
   "devDependencies": {
+    "@types/express": "^5.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
-    "@types/express": "^5.0.1"
+    "typescript": "^5.8.3"
   }
 }
