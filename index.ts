@@ -62,11 +62,11 @@ app.post("/result", limiter, async function (req, res) {
   }
 
   try {
-    const totalSeconds = await getTimeForChannel(channel);
+    const duration = await getDuration(channel);
     return res.render("result", {
-      time: getTimeString(totalSeconds),
-      title: channel.snippet?.title ?? query,
-      url: `https://www.youtube.com/playlist?list=${channel.contentDetails?.relatedPlaylists?.uploads}`,
+      duration: formatDuration(duration),
+      channelTitle: channel.snippet?.title ?? query,
+      uploadsUrl: `https://www.youtube.com/playlist?list=${channel.contentDetails?.relatedPlaylists?.uploads}`,
     });
   } catch (err) {
     return res.render("result", {
@@ -75,35 +75,7 @@ app.post("/result", limiter, async function (req, res) {
   }
 });
 
-const getTimeString = (seconds: number): string => {
-  const totalTime = secondsToTime(seconds);
-
-  let timeUnits = ["years", "months", "days", "hours", "minutes", "seconds"];
-  let ret = "";
-
-  let lastUnit = null;
-  let secondToLastUnit = null;
-  for (let i = 0; i < 6; i++)
-    if (totalTime[i] > 0) {
-      secondToLastUnit = lastUnit;
-      lastUnit = i;
-    }
-
-  for (let i = 0; i < 6; i++) {
-    if (totalTime[i] > 0) {
-      ret +=
-        totalTime[i] +
-        " " +
-        (totalTime[i] > 1 ? timeUnits[i] : timeUnits[i].slice(0, -1));
-      if (i === secondToLastUnit) ret += " and ";
-      else if (i !== lastUnit) ret += ", ";
-    }
-  }
-
-  return ret;
-};
-
-const getTimeForChannel = async (
+const getDuration = async (
   channel: youtube_v3.Schema$Channel,
 ): Promise<number> => {
   const uploadsPlaylist = channel.contentDetails?.relatedPlaylists?.uploads;
@@ -112,20 +84,11 @@ const getTimeForChannel = async (
   }
 
   const videoIds = await getPlaylistVideos(uploadsPlaylist);
-  console.log(videoIds.length);
+  if (videoIds.length === 0) {
+    throw new Error("Channel has no videos");
+  }
 
   return getVideosLengthTotal(videoIds as any);
-};
-
-const secondsToTime = (seconds: number): number[] => {
-  let ret = [0, 0, 0, 0, 0];
-  for (let t of [31557600, 2629800, 86400, 3600, 60].entries()) {
-    if (seconds >= t[1]) {
-      ret[t[0]] += Math.floor(seconds / t[1]);
-      seconds -= Math.floor(seconds / t[1]) * t[1];
-    }
-  }
-  return [...ret, Math.floor(seconds)];
 };
 
 const getChannel = async (
@@ -164,17 +127,14 @@ const getPlaylistVideos = async (playlistId: string) => {
 };
 
 const getVideosLengthTotal = async (videoIds: string[]): Promise<number> => {
-  let promises = [];
-  for (let i = 0; i < videoIds.length; i += 50) {
-    promises.push(
+  const results = await Promise.all(
+    Array.from({ length: Math.ceil(videoIds.length / 50) }, (_, i) =>
       youtube.videos.list({
         part: ["contentDetails"],
         id: videoIds.slice(i, i + 50),
       }),
-    );
-  }
-
-  const results = await Promise.all(promises);
+    ),
+  );
 
   return results
     .flatMap((result) => result.data.items)
@@ -186,4 +146,38 @@ const getVideosLengthTotal = async (videoIds: string[]): Promise<number> => {
         ),
       0,
     );
+};
+
+const formatDuration = (seconds: number): string => {
+  const time = secondsToTime(seconds);
+
+  const str = Object.entries(time)
+    .map(([unit, n]) => `${n} ${unit}${n !== 1 ? "s" : ""}`)
+    .join(", ");
+
+  const commaIndex = str.lastIndexOf(",");
+  return str.slice(0, commaIndex) + " and" + str.slice(commaIndex + 1);
+};
+
+const secondsToTime = (seconds: number): { [k: string]: number } => {
+  const unitSeconds = {
+    year: 365.25 * 24 * 60 * 60,
+    month: 30.5 * 24 * 60 * 60,
+    week: 7 * 24 * 60 * 60,
+    day: 24 * 60 * 60,
+    hour: 60 * 60,
+    minute: 60,
+    second: 1,
+  };
+
+  const ret: { [k: string]: number } = {};
+  for (let [unit, unit_secs] of Object.entries(unitSeconds)) {
+    const units = Math.floor(seconds / unit_secs);
+    if (units > 0) {
+      ret[unit] = units;
+    }
+    seconds -= units * unit_secs;
+  }
+
+  return ret;
 };

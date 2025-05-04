@@ -7,19 +7,20 @@ html(lang="en")
     script(type='text/javascript').
   body
     .container
-      if time
+      if duration
         p.result
           | It would take
-          |
-          span.time= time
-          |
+          br
+          span.time= duration
+          br
           | to watch all of
           |
-          span.title= title
+          span.title= channelTitle
           | 's videos.
           br
+          br
           | You can do that 
-          a(href=url) here
+          a(href=uploadsUrl) here
           | .
       if error
         p.error= error
