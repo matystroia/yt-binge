@@ -16,12 +16,15 @@ html(lang="en")
           | to watch all of
           |
           span.title= channelTitle
-          | 's videos.
-          br
-          br
-          | You can do that 
-          a(href=uploadsUrl) here
+          | 's 
+          a(href=uploadsUrl) videos
           | .
+          br
+          if trivia
+            br
+            | That's about the same as 
+            span= trivia
+            | .
       if error
         p.error= error
       br

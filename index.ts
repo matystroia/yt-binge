@@ -65,6 +65,7 @@ app.post("/result", limiter, async function (req, res) {
     const duration = await getDuration(channel);
     return res.render("result", {
       duration: formatDuration(duration),
+      trivia: getTrivia(duration),
       channelTitle: channel.snippet?.title ?? query,
       uploadsUrl: `https://www.youtube.com/playlist?list=${channel.contentDetails?.relatedPlaylists?.uploads}`,
     });
@@ -146,6 +147,23 @@ const getVideosLengthTotal = async (videoIds: string[]): Promise<number> => {
         ),
       0,
     );
+};
+
+const getTrivia = (seconds: number): string | undefined => {
+  // https://en.wikipedia.org/wiki/Orders_of_magnitude_(time)
+  const durationTrivia: [number, string][] = [
+    [35_730, "the rotational period of Jupiter"],
+    [58_000, "one day on Neptune"],
+    [62_000, "one day on Uranus"],
+    [5_000_000, "the rotational period of Mercury"],
+    [7_600_000, "one year on Mercury"],
+    [19_400_000, "one year on Venus"],
+  ];
+  for (let [duration, trivia] of durationTrivia) {
+    if (Math.abs(duration - seconds) / duration <= 0.15) {
+      return trivia;
+    }
+  }
 };
 
 const formatDuration = (seconds: number): string => {
