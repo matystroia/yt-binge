@@ -6,7 +6,11 @@ import isoDuration from "iso8601-duration";
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const PORT = process.env.PORT || 3000;
 
-const youtube = google.youtube({ version: "v3", http2: true });
+const youtube = google.youtube({
+  version: "v3",
+  auth: YOUTUBE_API_KEY,
+  http2: true,
+});
 
 const app = express();
 app.use(express.static("public"));
@@ -117,7 +121,6 @@ const getChannel = async (
 ) => {
   const response = await youtube.channels.list({
     part: ["snippet", "contentDetails"],
-    key: YOUTUBE_API_KEY,
     ...params,
   });
   return response.data.items?.[0] || null;
@@ -130,7 +133,6 @@ const getPlaylistVideos = async (playlistId: string) => {
       part: ["snippet"],
       maxResults: 50,
       pageToken: pageToken,
-      key: YOUTUBE_API_KEY,
     });
 
   const videoIds = [];
@@ -156,7 +158,6 @@ const getVideosLengthTotal = async (videoIds: string[]): Promise<number> => {
       youtube.videos.list({
         part: ["contentDetails"],
         id: videoIds.slice(i, i + 50),
-        key: YOUTUBE_API_KEY,
       }),
     );
   }
