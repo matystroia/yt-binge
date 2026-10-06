@@ -2,7 +2,7 @@ doctype html
 html(lang="en")
   head
     title= 'YouTube Binge'
-    link(rel='stylesheet', href='css/style.css')
+    link(rel='stylesheet', href=`${base}/css/style.css`)
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Montserrat:300, 700')
     script(type='text/javascript').
       function onSubmit() {
@@ -11,7 +11,7 @@ html(lang="en")
         document.getElementById("spinner").setAttribute('style', 'display: unset')
       }
   body
-    form(action='/result', method='post', onsubmit='onSubmit()')
+    form(action=`${base}/result`, method='post', onsubmit='onSubmit()')
       .container
         h1 YouTube Binge!
         .intro

@@ -6,6 +6,7 @@ import isoDuration from "iso8601-duration";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const PORT = process.env.PORT || 3000;
+const BASE_PATH = process.env.BASE_PATH || "";
 
 const youtube = google.youtube({
   version: "v3",
@@ -17,6 +18,7 @@ const app = express();
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "pug");
+app.locals.base = BASE_PATH;
 
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
@@ -27,10 +29,6 @@ const limiter = rateLimit({
     res.render("result", {
       error: "Sorry, you've made too many requests! Try again in an hour",
     }),
-});
-
-app.listen(PORT, function () {
-  console.log(`App listening on port ${PORT}`);
 });
 
 app.get("/", function (_, res) {
@@ -74,6 +72,12 @@ app.post("/result", limiter, async function (req, res) {
       error: `Error while getting channel videos: ${err}`,
     });
   }
+});
+
+const root = express();
+root.use(BASE_PATH || "/", app);
+root.listen(PORT, function () {
+  console.log(`App listening on port ${PORT}`);
 });
 
 const getDuration = async (
